@@ -1,0 +1,17 @@
+d 'LINMED': module to perform causal mediation analysis using linear models
+d
+d linmed performs causal mediation analysis using linear models for both the mediator and outcome. Two models are 
+d estimated: a model for the mediator conditional on treatment and baseline covariates (if specified) after centering them 
+d around their sample means, and a model for the outcome conditional on treatment, the mediator, and the baseline covariates 
+d after centering them around their sample means.
+d
+d Requires: Stata version 15
+d
+d Distribution-Date: 20240710
+d
+d Author: Geoff Wodtke, University of Chicago
+d Support: email wodtke@@uchicago.edu
+d
+f linmed.ado
+f linmedbs.ado
+f linmed.sthlp
