@@ -23,7 +23,8 @@ program define linmed, eclass
 		[cluster(varname numeric)] ///
 		[level(cilevel)] ///
 		[seed(passthru)] ///
-		[saving(string)]
+		[saving(string)] ///
+		[detail]
 
 	qui {
 		marksample touse
@@ -31,6 +32,12 @@ program define linmed, eclass
 		if r(N) == 0 error 2000
 	}
 
+	if ("`detail'" != "") {
+		linmedbs `varlist' if `touse' [`weight' `exp'], ///
+			dvar(`dvar') mvar(`mvar') cvars(`cvars') ///
+			d(`d') dstar(`dstar') m(`m') `nointeraction' `cxd' `cxm'
+		}
+	
 	if ("`saving'" != "") {
 		bootstrap ATE=r(ate) NDE=r(nde) NIE=r(nie) CDE=r(cde), force ///
 			reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///

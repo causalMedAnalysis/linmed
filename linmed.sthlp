@@ -15,7 +15,7 @@
 {p 8 18 2}
 {cmd:linmed} {varname} {ifin} [{it:{help weight:pweight}}] {cmd:,} dvar({varname}) mvar({varname}) 
 d({it:real}) dstar({it:real}) m({it:real}) [cvars({varlist})) {opt nointer:action} {opt cxd} {opt cxm} 
-{reps({it:integer 1000}) strata({varname}) cluster({varname}) level(cilevel) seed({it:passthru})]
+{reps({it:integer}) strata({varname}) cluster({varname}) level(cilevel) seed({it:passthru}) {opt detail}]
 
 {phang}{opt varname} - this specifies the outcome variable.
 
@@ -59,6 +59,8 @@ option is omitted, then the default level of 95% is used.
 
 {phang}{opt seed(passthru)} - this option specifies the seed for bootstrap resampling. If this option is omitted, then a random 
 seed is used and the results cannot be replicated. {p_end}
+
+{phang}{opt detail} - this option prints the fitted models used to construct the effect estimates. {p_end}
 
 {title:Description}
 
@@ -111,7 +113,7 @@ University of Chicago{p_end}
 
 {title:References}
 
-{pstd}Wodtke GT, Zhou X, and Elwert F. Causal Mediation Analysis. In preparation. {p_end}
+{pstd}Wodtke GT, Zhou X. Causal Mediation Analysis. In preparation. {p_end}
 
 {title:Also see}
 
