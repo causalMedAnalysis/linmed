@@ -1,9 +1,6 @@
 ### linmed: A Stata Module for Causal Mediation Analysis using Linear Models
 
-`linmed` is a Stata module to perform causal mediation analysis using linear models for both the mediator and the outcome. This command estimates two models:
-
-1. **Mediator Model**: Predicts the mediator variable conditional on treatment and baseline covariates, centering them around their sample means.
-2. **Outcome Model**: Predicts the outcome variable conditional on treatment, the mediator, and baseline covariates, again centering them around their sample means.
+`linmed` is a Stata module to perform causal mediation analysis using linear models for both the mediator and the outcome. 
 
 ## Syntax
 
@@ -31,9 +28,14 @@ linmed varname [if] [in] [pw=weight] , dvar(varname) mvar(varname) d(real) dstar
 
 ## Description
 
-`linmed` provides estimates of:
+This command estimates two linear regression models:
 
-- **Controlled Direct Effect**: The effect of treatment on the outcome setting the mediator to m.
+1. **Mediator Model**: for the conditional mean of the mediator variable given the treatment and baseline covariates, after centering them around their sample means.
+2. **Outcome Model**: for the conditional mean of the outcome variable given the treatment, the mediator, and baseline covariates, again centering them around their sample means.
+
+`linmed` uses the coefficients from these models to construct estimates of:
+
+- **Controlled Direct Effect**: The effect of treatment on the outcome intervening to set the mediator to m for everyone.
 - **Natural Direct Effect**: The effect of treatment on the outcome not transmitted through the mediator.
 - **Natural Indirect Effect**: The effect of treatment on the outcome that operates through the mediator.
 - **Average Total Effect**: The total effect of treatment on the outcome.
@@ -49,16 +51,16 @@ linmed varname [if] [in] [pw=weight] , dvar(varname) mvar(varname) d(real) dstar
 ### No interaction between treatment and mediator, percentile bootstrap CIs with default settings:
 
 ```stata
-. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) nointer reps(1000)
+. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) nointer
 ```
 
 ### Treatment-mediator interaction, percentile bootstrap CIs with default settings:
 
 ```stata
-. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) reps(1000)
+. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0)
 ```
 
-### Treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with default settings:
+### Treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with 1000 replications:
 
 ```stata
 . linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) cxd reps(1000)
@@ -81,7 +83,7 @@ Email: [wodtke@uchicago.edu](mailto:wodtke@uchicago.edu)
 
 ## References
 
-- Wodtke GT, Zhou X. Causal Mediation Analysis. In preparation.
+- Wodtke, Geoffrey T. and Xiang Zhou. Causal Mediation Analysis. In preparation.
 
 ## Also See
 
