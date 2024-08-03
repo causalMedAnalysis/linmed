@@ -1,4 +1,3 @@
-`markdown
 ### linmed: A Stata Module for Causal Mediation Analysis using Linear Models
 
 `linmed` is a Stata module to perform causal mediation analysis using linear models for both the mediator and the outcome. This command estimates two models:
