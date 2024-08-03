@@ -46,7 +46,7 @@ included in the mediator and outcome models.
 {phang}{opt cxm} - this option specifies that all two-way interactions between the mediator and baseline covariates are
 included in the outcome model.
 
-{phang}{opt reps(integer 200)} - this option specifies the number of replications for bootstrap resampling (the default is 200).
+{phang}{opt reps(integer)} - this option specifies the number of replications for bootstrap resampling (the default is 200).
 
 {phang}{opt strata(varname)} - this option specifies a variable that identifies resampling strata. If this option is specified, 
 then bootstrap samples are taken independently within each stratum.
@@ -80,15 +80,15 @@ and the total effect.{p_end}
  
 {pstd} no interaction between treatment and mediator, percentile bootstrap CIs with default settings: {p_end}
  
-{phang2}{cmd:. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3)	d(1) dstar(0) m(0) nointer reps(1000)} {p_end}
+{phang2}{cmd:. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3)	d(1) dstar(0) m(0) nointer} {p_end}
 
 
 {pstd} treatment-mediator interaction, percentile bootstrap CIs with default settings: {p_end}
  
-{phang2}{cmd:. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3)	d(1) dstar(0) m(0) reps(1000)} {p_end}
+{phang2}{cmd:. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3)	d(1) dstar(0) m(0)} {p_end}
 
 
-{pstd} treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with default settings: {p_end}
+{pstd} treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with 1000 replications: {p_end}
  
 {phang2}{cmd:. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3)	d(1) dstar(0) m(0) cxd reps(1000)} {p_end}
 
