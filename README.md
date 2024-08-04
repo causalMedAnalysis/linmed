@@ -49,12 +49,6 @@ This command estimates two linear regression models:
 // Load data
 use nlsy79.dta
 
-## Examples
-
-```stata
-// Load data
-use nlsy79.dta
-
 // No interaction between treatment and mediator, percentile bootstrap CIs with default settings
 linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) nointer
 
