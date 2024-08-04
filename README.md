@@ -45,28 +45,24 @@ This command estimates two linear regression models:
 
 ## Examples
 
-### Setup
+```stata
+// Load data
+use nlsy79.dta
+
+## Examples
 
 ```stata
-. use nlsy79.dta
-```
+// Load data
+use nlsy79.dta
 
-### No interaction between treatment and mediator, percentile bootstrap CIs with default settings:
+// No interaction between treatment and mediator, percentile bootstrap CIs with default settings
+linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) nointer
 
-```stata
-. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) nointer
-```
+// Treatment-mediator interaction, percentile bootstrap CIs with default settings
+linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0)
 
-### Treatment-mediator interaction, percentile bootstrap CIs with default settings:
-
-```stata
-. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0)
-```
-
-### Treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with 1000 replications:
-
-```stata
-. linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) cxd reps(1000)
+//Treatment-mediator interaction, all two-way interactions between baseline covariates and treatment, percentile bootstrap CIs with 1000 replications
+linmed std_cesd_age40, dvar(att22) mvar(ever_unemp_age3539) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) m(0) cxd reps(1000)
 ```
 
 ## Saved Results
