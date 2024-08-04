@@ -1,4 +1,4 @@
-### linmed: A Stata Module for Causal Mediation Analysis using Linear Models
+# linmed: A Stata Module for Causal Mediation Analysis using Linear Models
 
 `linmed` is a Stata module to perform causal mediation analysis using linear models for both the mediator and the outcome. 
 
@@ -8,13 +8,16 @@
 linmed varname [if] [in] [pw=weight] , dvar(varname) mvar(varname) d(real) dstar(real) m(real) [options]
 ```
 
-### Options
+### Required Arguments
 
-- `dvar(varname)`: Specifies the treatment (exposure) variable.
+- `dvar(varname)`: Specifies the treatment variable.
 - `mvar(varname)`: Specifies the mediator variable.
 - `d(real)`: Specifies the reference level of treatment.
-- `dstar(real)`: Specifies the alternative level of treatment, defining the treatment contrast of interest.
+- `dstar(real)`: Specifies the alternative level of treatment, defining the treatment contrast of interest (d - dstar).
 - `m(real)`: Specifies the level of the mediator at which the controlled direct effect is evaluated.
+
+### Options
+
 - `cvars(varlist)`: List of baseline covariates to include in the analysis. Categorical variables must be coded as dummy variables.
 - `nointeraction`: Specifies that a treatment-mediator interaction is not included in the outcome model (default assumes interaction is present).
 - `cxd`: Includes all two-way interactions between the treatment and baseline covariates in the mediator and outcome models.
