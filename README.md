@@ -10,6 +10,7 @@ linmed varname [if] [in] [pw=weight] , dvar(varname) mvar(varname) d(real) dstar
 
 ### Required Arguments
 
+- `varname`: Specifies the outcome variable.
 - `dvar(varname)`: Specifies the treatment variable.
 - `mvar(varname)`: Specifies the mediator variable.
 - `d(real)`: Specifies the reference level of treatment.
