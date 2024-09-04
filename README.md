@@ -5,7 +5,7 @@
 ## Syntax
 
 ```stata
-linmed varname [if] [in] [pw=weight] , dvar(varname) mvar(varname) d(real) dstar(real) m(real) [options]
+linmed varname [if] [in] [pweight] , dvar(varname) mvar(varname) d(real) dstar(real) m(real) [options]
 ```
 
 ### Required Arguments
