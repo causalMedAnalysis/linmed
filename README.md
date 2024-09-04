@@ -81,6 +81,6 @@ Email: [wodtke@uchicago.edu](mailto:wodtke@uchicago.edu)
 
 ## Also See
 
-- Help: [regress R](#), [bootstrap R](#)
+- Help: regress, bootstrap
 
 ```
