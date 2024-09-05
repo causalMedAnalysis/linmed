@@ -44,8 +44,8 @@ the treatment contrast of interest.
 {phang}{opt cvars(varlist)} - this option specifies the list of baseline covariates to be included in the analysis. Categorical 
 variables need to be coded as a series of dummy variables before being entered as covariates.
 
-{phang}{opt nointer:action} - this option specifies whether a treatment-mediator interaction is not to be
-included in the outcome model (the default includes the interaction).
+{phang}{opt nointer:action} - this option specifies whether treatment-mediator interactions are not to be
+included in the outcome model (the default includes the interactions).
 
 {phang}{opt cxd} - this option specifies that all two-way interactions between the treatment and baseline covariates are
 included in the mediator and outcome models.
@@ -71,7 +71,7 @@ seed is used and the results cannot be replicated. {p_end}
 
 {title:Description}
 
-{pstd}{cmd:linmed} performs causal mediation analysis using linear models for both the mediator and outcome. {p_end}
+{pstd}{cmd:linmed} performs causal mediation analysis using linear models for both the mediator(s) and outcome. {p_end}
 
 {pstd}When a single mediator is specified, it estimates total, natural direct, and natural indirect effects using two linear models:
 a model for the mediator conditional on treatment and baseline covariates after centering them around their sample means, 
