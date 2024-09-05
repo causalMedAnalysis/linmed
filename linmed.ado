@@ -8,12 +8,10 @@ program define linmed, eclass
 
 	version 15	
 
-	syntax varname(numeric) [if][in] [pweight], ///
+	syntax varlist(min=2 numeric) [if][in] [pweight], ///
 		dvar(varname numeric) ///
-		mvar(varname numeric) ///
 		d(real) ///
 		dstar(real) ///
-		m(real) ///
 		[cvars(varlist numeric)] ///
 		[NOINTERaction] ///
 		[cxd] ///
@@ -32,30 +30,58 @@ program define linmed, eclass
 		if r(N) == 0 error 2000
 	}
 
-	if ("`detail'" != "") {
-		linmedbs `varlist' if `touse' [`weight' `exp'], ///
-			dvar(`dvar') mvar(`mvar') cvars(`cvars') ///
-			d(`d') dstar(`dstar') m(`m') `nointeraction' `cxd' `cxm'
-		}
+	gettoken yvar mvars : varlist
 	
-	if ("`saving'" != "") {
-		bootstrap ATE=r(ate) NDE=r(nde) NIE=r(nie) CDE=r(cde), force ///
-			reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
-			saving(`saving', replace) noheader notable: ///
-			linmedbs `varlist' if `touse' [`weight' `exp'], ///
-			dvar(`dvar') mvar(`mvar') cvars(`cvars') ///
-			d(`d') dstar(`dstar') m(`m') `nointeraction' `cxd' `cxm'
-			}
+	local num_mvars = wordcount("`mvars'")
+	
+	if ("`detail'"!="") {
+		linmedbs `varlist' [`weight' `exp'] if `touse', ///
+			dvar(`dvar') d(`d') dstar(`dstar') ///
+			cvars(`cvars') `nointeraction' `cxd' `cxm'
+	}
+	
+	if (`num_mvars'==1) {
+	
+		if ("`saving'" != "") {
+			bootstrap ATE=r(ate) NDE=r(nde) NIE=r(nie), force ///
+				reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
+				saving(`saving', replace) noheader notable: ///
+				linmedbs `varlist' [`weight' `exp'] if `touse', ///
+					dvar(`dvar') d(`d') dstar(`dstar') ///
+					cvars(`cvars') `nointeraction' `cxd' `cxm'
+		}
 
-	if ("`saving'" == "") {
-		bootstrap ATE=r(ate) NDE=r(nde) NIE=r(nie) CDE=r(cde), force ///
-			reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
-			noheader notable: ///
-			linmedbs `varlist' if `touse' [`weight' `exp'], ///
-			dvar(`dvar') mvar(`mvar') cvars(`cvars') ///
-			d(`d') dstar(`dstar') m(`m') `nointeraction' `cxd' `cxm'
-			}
-			
+		if ("`saving'" == "") {
+			bootstrap ATE=r(ate) NDE=r(nde) NIE=r(nie), force ///
+				reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
+				noheader notable: ///
+				linmedbs `varlist' [`weight' `exp'] if `touse', ///
+					dvar(`dvar') d(`d') dstar(`dstar') ///
+					cvars(`cvars') `nointeraction' `cxd' `cxm'
+		}
+	}
+
+	if (`num_mvars'>=2) {
+	
+		if ("`saving'" != "") {
+			bootstrap ATE=r(ate) MNDE=r(nde) MNIE=r(nie), force ///
+				reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
+				saving(`saving', replace) noheader notable: ///
+				linmedbs `varlist' [`weight' `exp'] if `touse', ///
+					dvar(`dvar') d(`d') dstar(`dstar') ///
+					cvars(`cvars') `nointeraction' `cxd' `cxm'
+		}
+
+		if ("`saving'" == "") {
+			bootstrap ATE=r(ate) MNDE=r(nde) MNIE=r(nie), force ///
+				reps(`reps') strata(`strata') cluster(`cluster') level(`level') `seed' ///
+				noheader notable: ///
+				linmedbs `varlist' [`weight' `exp'] if `touse', ///
+					dvar(`dvar') d(`d') dstar(`dstar') ///
+					cvars(`cvars') `nointeraction' `cxd' `cxm'
+		}
+	}
+	
 	estat bootstrap, p noheader
 
 end linmed

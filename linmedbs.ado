@@ -8,16 +8,14 @@ program define linmedbs, rclass
 	
 	version 15	
 
-	syntax varname(numeric) [if][in] [pweight], ///
+	syntax varlist(min=2 numeric) [if][in] [pweight], ///
 		dvar(varname numeric) ///
-		mvar(varname numeric) ///
 		d(real) ///
 		dstar(real) ///
-		m(real) ///
 		[cvars(varlist numeric)] ///
 		[NOINTERaction] ///
 		[cxd] ///
-		[cxm]
+		[cxm] 
 
 	qui {
 		marksample touse
@@ -25,104 +23,115 @@ program define linmedbs, rclass
 		if r(N) == 0 error 2000
 		local N = r(N)
 	}
-		
-	local yvar `varlist'
 	
-	if ("`nointeraction'" == "") {
-		local interaction true	
-		tempvar inter
-		qui gen `inter' = `dvar'*`mvar' if `touse'
-		}
-	else {
-		local interaction false
-		}
+	gettoken yvar mvars : varlist
+	
+	local num_mvars = wordcount("`mvars'")
 
-	if ("`cvars'"!="") {
-		
-		local cvars_r ""
-		foreach c in `cvars' {
-			tempvar `c'_r001
-			qui regress `c' [`weight' `exp'] if `touse'
-			qui predict ``c'_r001' if e(sample), resid
-			local cvars_r `cvars_r' ``c'_r001'
-			}
-
-		if ("`cxd'"!="") {	
-			foreach c in `cvars_r' {
-				tempvar `c'_xD
-				qui gen ``c'_xD' = `dvar' * `c' if `touse'
-				local cxd_vars `cxd_vars' ``c'_xD'
+	if ("`nointeraction'"=="") {
+		foreach m in `mvars' {
+			capture confirm new variable Dx_`m'
+				if _rc {
+					display as error "{p 0 0 5 0}The command needs to create a new variable"
+					display as error "with the following name: Dx_`m', "
+					display as error "but this variable has already been defined.{p_end}"
+					error 110
 				}
-			}
+			qui gen Dx_`m' = `dvar' * `m' if `touse'
+			local inter `inter' Dx_`m'
+		}
+	}
 
-		if ("`cxm'"!="") {	
-			foreach c in `cvars_r' {
-				tempvar `c'_xM
-				qui gen ``c'_xM' = `mvar' * `c' if `touse'
-				local cxm_vars `cxm_vars' ``c'_xM'
-				}
-			}
-		
-		if ("`interaction'"=="false") {
-			regress `yvar' `dvar' `mvar' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
-			matrix beta = e(b)
-			
-			regress `mvar' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse' 
-			matrix theta = e(b)
-			
-			return scalar cde = beta[1,1]*(`d'-`dstar')
-			return scalar nde = beta[1,1]*(`d'-`dstar')
-			return scalar nie = theta[1,1]*beta[1,2]*(`d'-`dstar')
-			return scalar ate = (beta[1,1]*(`d'-`dstar'))+(theta[1,1]*beta[1,2]*(`d'-`dstar'))
-			}
-		
-		if ("`interaction'"=="true") {
-			regress `yvar' `dvar' `mvar' `inter' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
-			matrix beta = e(b)
-			
-			regress `mvar' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse' 
-			matrix theta = e(b)
-			
-			local nc : word count `cvars' `cxd_vars'
-			
-			return scalar cde = (beta[1,1]+beta[1,3]*`m')*(`d'-`dstar')
-			return scalar nde = (beta[1,1]+beta[1,3]*(theta[1,`nc'+2]+theta[1,1]*`dstar'))*(`d'-`dstar')
-			return scalar nie = theta[1,1]*(beta[1,2]+beta[1,3]*`d')*(`d'-`dstar')
-			return scalar ate = ((beta[1,1]+beta[1,3]*(theta[1,`nc'+2]+theta[1,1]*`dstar'))*(`d'-`dstar'))+ ///
-								 (theta[1,1]*(beta[1,2]+beta[1,3]*`d')*(`d'-`dstar'))
+	foreach c in `cvars' {
+		tempvar `c'_r001
+		qui regress `c' [`weight' `exp'] if `touse'
+		qui predict ``c'_r001' if e(sample), resid
+		local cvars_r `cvars_r' ``c'_r001'
+	}
+
+	if ("`cxd'"!="") {	
+		foreach c in `cvars_r' {
+			tempvar `c'xD
+			qui gen ``c'xD' = `dvar' * `c' if `touse'
+			local cxd_vars `cxd_vars' ``c'xD'
+		}
+	}
+
+	local i = 1
+	if ("`cxm'"!="") {	
+		foreach c in `cvars_r' {
+			foreach m in `mvars' {
+				tempvar mXc`i'
+				qui gen `mXc`i'' = `m' * `c' if `touse'
+				local cxm_vars `cxm_vars' `mXc`i''
+				local ++i
 			}
 		}
+	}
 
-	if ("`cvars'"=="") {
-			
-		if ("`interaction'"=="false") {
-			regress `yvar' `dvar' `mvar' [`weight' `exp'] if `touse' 
-			matrix beta = e(b)
-			
-			regress `mvar' `dvar' [`weight' `exp'] if `touse' 
-			matrix theta = e(b)
-			
-			return scalar cde = beta[1,1]*(`d'-`dstar')
-			return scalar nde = beta[1,1]*(`d'-`dstar')
-			return scalar nie = theta[1,1]*beta[1,2]*(`d'-`dstar')
-			return scalar ate = (beta[1,1]*(`d'-`dstar'))+(theta[1,1]*beta[1,2]*(`d'-`dstar'))
-			}
-		
-		if ("`interaction'"=="true") {
-			regress `yvar' `dvar' `mvar' `inter' [`weight' `exp'] if `touse' 
-			matrix beta = e(b)
-			
-			regress `mvar' `dvar' [`weight' `exp'] if `touse' 
-			matrix theta = e(b)
-			
-			local nc : word count `cvars' `cxd_vars'
-			
-			return scalar cde = (beta[1,1]+beta[1,3]*`m')*(`d'-`dstar')
-			return scalar nde = (beta[1,1]+beta[1,3]*(theta[1,`nc'+2]+theta[1,1]*`dstar'))*(`d'-`dstar')
-			return scalar nie = theta[1,1]*(beta[1,2]+beta[1,3]*`d')*(`d'-`dstar')
-			return scalar ate = ((beta[1,1]+beta[1,3]*(theta[1,`nc'+2]+theta[1,1]*`dstar'))*(`d'-`dstar'))+ ///
-								 (theta[1,1]*(beta[1,2]+beta[1,3]*`d')*(`d'-`dstar'))
-			}
+	if ("`nointeraction'"!="") {
+		local k = 1
+		foreach m in `mvars' {
+			regress `m' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse' 
+			scalar beta2`k' = _b[`dvar']
+			local ++k
 		}
 
+		regress `yvar' `dvar' `mvars' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
+		scalar gamma2 = _b[`dvar']
+		local k = 1
+		foreach m in `mvars' {
+			scalar gamma3`k' = _b[`m']
+			local ++k
+		}
+			
+		scalar nie_summand = 0
+		forval k=1/`num_mvars' {
+			scalar nie_summand = nie_summand + (beta2`k'*gamma3`k')
+		}
+				
+		return scalar nde = gamma2*(`d'-`dstar')
+		return scalar nie = nie_summand*(`d'-`dstar')
+		return scalar ate = (gamma2 + nie_summand)*(`d'-`dstar')
+	}
+
+	if ("`nointeraction'"=="") {
+		local k = 1
+		foreach m in `mvars' {
+			regress `m' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse'
+			scalar beta0`k' = _b[_cons]
+			scalar beta2`k' = _b[`dvar']
+			local ++k
+		}
+
+		regress `yvar' `dvar' `mvars' `inter' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
+		scalar gamma2 = _b[`dvar']
+		local k = 1
+		foreach m in `mvars' {
+			scalar gamma3`k' = _b[`m']
+			scalar gamma4`k' = _b[Dx_`m']
+			local ++k
+		}
+			
+		scalar nde_summand = 0
+		forval k=1/`num_mvars' {
+			scalar nde_summand = nde_summand + gamma4`k'*(beta0`k' + beta2`k'*`dstar')
+		}
+
+		scalar nie_summand = 0
+		forval k=1/`num_mvars' {
+			scalar nie_summand = nie_summand + (beta2`k'*(gamma3`k' + gamma4`k'*`d'))
+		}
+
+		return scalar nde = (gamma2 + nde_summand)*(`d'-`dstar')
+		return scalar nie = nie_summand*(`d'-`dstar')
+		return scalar ate = (gamma2 + nde_summand + nie_summand)*(`d'-`dstar')
+	}
+
+	if ("`nointeraction'"=="") {
+		foreach m in `mvars' {
+			capture drop Dx_`m'
+		}
+	}
+	
 end linmedbs
