@@ -126,9 +126,7 @@ program define linmedbs, rclass
 		return scalar nde = (gamma2 + nde_summand)*(`d'-`dstar')
 		return scalar nie = nie_summand*(`d'-`dstar')
 		return scalar ate = (gamma2 + nde_summand + nie_summand)*(`d'-`dstar')
-	}
-
-	if ("`nointeraction'"=="") {
+		
 		foreach m in `mvars' {
 			capture drop Dx_`m'
 		}
