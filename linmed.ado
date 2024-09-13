@@ -40,7 +40,7 @@ program define linmed, eclass
 			ATE=r(ate) ///
 			NDE=r(nde) ///
 			NIE=r(nie), ///
-				force reps(`reps') `seed' `options' noheader notable: ///
+				force `options' noheader notable: ///
 					linmedbs `varlist' [`weight' `exp'] if `touse', ///
 						dvar(`dvar') d(`d') dstar(`dstar') cvars(`cvars') ///
 						`nointeraction' `cxd' `cxm'
@@ -52,7 +52,7 @@ program define linmed, eclass
 			ATE=r(ate) ///
 			MNDE=r(nde) ///
 			MNIE=r(nie), ///
-				force reps(`reps') `seed' `options' noheader notable: ///
+				force `options' noheader notable: ///
 					linmedbs `varlist' [`weight' `exp'] if `touse', ///
 						dvar(`dvar') d(`d') dstar(`dstar') cvars(`cvars') ///
 						`nointeraction' `cxd' `cxm'
