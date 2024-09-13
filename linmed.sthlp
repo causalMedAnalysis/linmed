@@ -21,12 +21,8 @@
 {opt nointer:action} 
 {opt cxd} 
 {opt cxm} 
-{opt reps(integer)} 
-{opt strata(varname)} 
-{opt cluster(varname)} 
-{opt level(cilevel)} 
-{opt seed(passthru)} 
 {opt detail}
+[{it:{help bootstrap##options:bootstrap_options}}]
 
 {phang}{opt depvar} - this specifies the outcome variable.
 
@@ -53,25 +49,14 @@ included in the mediator and outcome models.
 {phang}{opt cxm} - this option specifies that all two-way interactions between the mediator(s) and baseline covariates are
 included in the outcome model.
 
-{phang}{opt reps(integer)} - this option specifies the number of replications for bootstrap resampling (the default is 200).
+{phang}{opt detail} - this option prints the fitted models used to construct the effect estimates.
 
-{phang}{opt strata(varname)} - this option specifies a variable that identifies resampling strata. If this option is specified, 
-then bootstrap samples are taken independently within each stratum.
-
-{phang}{opt cluster(varname)} - this option specifies a variable that identifies resampling clusters. If this option is specified,
-then the sample drawn during each replication is a bootstrap sample of clusters.
-
-{phang}{opt level(cilevel)} - this option specifies the confidence level for constructing bootstrap confidence intervals. If this 
-option is omitted, then the default level of 95% is used.
-
-{phang}{opt seed(passthru)} - this option specifies the seed for bootstrap resampling. If this option is omitted, then a random 
-seed is used and the results cannot be replicated. {p_end}
-
-{phang}{opt detail} - this option prints the fitted models used to construct the effect estimates. {p_end}
+{phang}{it:{help bootstrap##options:bootstrap_options}} - all {help bootstrap} options are available. {p_end}
 
 {title:Description}
 
-{pstd}{cmd:linmed} performs causal mediation analysis using linear models for both the mediator(s) and outcome. {p_end}
+{pstd}{cmd:linmed} performs causal mediation analysis using linear models for both the mediator(s) and outcome, and it
+computes inferential statistics using the nonparametric bootstrap. {p_end}
 
 {pstd}When a single mediator is specified, it estimates total, natural direct, and natural indirect effects using two linear models:
 a model for the mediator conditional on treatment and baseline covariates after centering them around their sample means, 
@@ -84,6 +69,11 @@ for each mediator conditional on treatment and the baseline covariates after cen
 model for the outcome conditional on treatment, all the mediators, and the baseline covariates after centering them around their 
 sample means. {p_end}
 
+{pstd}If using {help pweights} from a complex sample design that require rescaling to produce valid boostrap estimates, be sure to appropriately 
+specify the strata(), cluster(), and size() options from the {help bootstrap} command so that Nc-1 clusters are sampled from each stratum 
+with replacement, where Nc denotes the number of clusters per stratum. Failing to properly adjust the bootstrap procedure to account
+for a complex sample design and its associated sampling weights could lead to invalid inferential statistics. {p_end}
+
 {title:Examples}
 
 {pstd}Setup{p_end}
@@ -91,20 +81,19 @@ sample means. {p_end}
 
 {pstd} single mediator, no interaction between treatment and mediator, percentile bootstrap CIs with default settings: {p_end}
  
-{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) nointer reps(1000)} {p_end}
+{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) nointer} {p_end}
 
-
-{pstd} single mediator, treatment-mediator interaction, percentile bootstrap CIs with default settings: {p_end}
+{pstd} single mediator, treatment-mediator interaction, percentile bootstrap CIs with 1000 replications: {p_end}
  
 {phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) reps(1000)} {p_end}
 
 {pstd} single mediator, all two-way interactions with treatment and the mediator, percentile bootstrap CIs with default settings: {p_end}
  
-{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) cxd cxm reps(1000)} {p_end}
+{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) cxd cxm} {p_end}
 
 {pstd} multiple mediators, all treatment-mediator interactions, percentile bootstrap CIs with default settings: {p_end}
  
-{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539 log_faminc_adj_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0) reps(1000)} {p_end}
+{phang2}{cmd:. linmed std_cesd_age40 ever_unemp_age3539 log_faminc_adj_age3539, dvar(att22) cvars(female black hispan paredu parprof parinc_prank famsize afqt3) d(1) dstar(0)} {p_end}
 
 {title:Saved results}
 

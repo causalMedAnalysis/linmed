@@ -72,11 +72,15 @@ program define linmedbs, rclass
 	if ("`nointeraction'"!="") {
 		local k = 1
 		foreach m in `mvars' {
+			di ""
+			di "Model for `m' conditional on {cvars `dvar'}:"
 			regress `m' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse' 
 			scalar beta2`k' = _b[`dvar']
 			local ++k
 		}
 
+		di ""
+		di "Model for `yvar' conditional on {cvars `dvar' `mvars'}:"
 		regress `yvar' `dvar' `mvars' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
 		scalar gamma2 = _b[`dvar']
 		local k = 1
@@ -98,12 +102,16 @@ program define linmedbs, rclass
 	if ("`nointeraction'"=="") {
 		local k = 1
 		foreach m in `mvars' {
+			di ""
+			di "Model for `m' conditional on {cvars `dvar'}:"
 			regress `m' `dvar' `cvars_r' `cxd_vars' [`weight' `exp'] if `touse'
 			scalar beta0`k' = _b[_cons]
 			scalar beta2`k' = _b[`dvar']
 			local ++k
 		}
 
+		di ""
+		di "Model for `yvar' conditional on {cvars `dvar' `mvars'}:"
 		regress `yvar' `dvar' `mvars' `inter' `cvars_r' `cxd_vars' `cxm_vars' [`weight' `exp'] if `touse' 
 		scalar gamma2 = _b[`dvar']
 		local k = 1
