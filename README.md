@@ -34,8 +34,7 @@ When a single mediator is specified, `linmed` estimates total, natural direct, a
 
 When multiple mediators are specified, `linmed` provides estimates for the total effect and then for the multivariate natural direct and indirect effects operating through the entire set of mediators considered together. To this end, it fits separate models for each mediator conditional on treatment and the baseline covariates after centering them around their sample means, and then a model for the outcome conditional on treatment, all the mediators, and the baseline covariates after centering them around their sample means.
 
-`linmed` allows pweights, but it does not internally rescale them for use with the bootstrap. If using weights from a complex sample design that require rescaling to produce valid boostrap estimates, the user must be sure to appropriately specify the `strata`, `cluster`, and `size` options from the `bootstrap` command so that Nc-1 clusters are sampled within from each stratum, where Nc denotes the number of clusters per stratum. Failure to properly adjust the bootstrap sampling to account
-for a complex sample design that requires `pweights` could lead to invalid inferential statistics.
+`linmed` allows pweights, but it does not internally rescale them for use with the bootstrap. If using weights from a complex sample design that require rescaling to produce valid boostrap estimates, the user must be sure to appropriately specify the `strata`, `cluster`, and `size` options from the `bootstrap` command so that Nc-1 clusters are sampled within from each stratum, where Nc denotes the number of clusters per stratum. Failure to properly adjust the bootstrap sampling to account for a complex sample design that requires `pweights` could lead to invalid inferential statistics.
 
 ## Examples
 
