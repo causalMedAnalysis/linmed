@@ -1,2 +1,31 @@
-v 3
-p linmed Stata module to perform causal mediation analysis using linear models
+{smcl}
+{txt}{sf}{ul off}
+{.-}
+{s6hlp}
+package ^linmed^ from https://github.com/causalMedAnalysis/linmed
+{smcl}
+{.-}
+{s6hlp}
+
+{smcl}
+{hilite:TITLE}{p 6 8}'LINMED': causal mediation analysis using linear models{p_end}
+{s6hlp}
+
+^DESCRIPTION/AUTHOR(S)^
+      
+linmed performs causal mediation analysis using linear models for the mediator(s) and outcome.
+      
+Requires: Stata version 15
+      
+Distribution-Date: 20240717
+      
+Author: Geoff Wodtke, University of Chicago
+Support: email wodtke@@uchicago.edu
+      
+
+^INSTALLATION FILES^                              (type ^net install^ ^linmed^)
+     linmed.ado
+     linmedbs.ado
+     linmed.sthlp
+
+{txt}{sf}{ul off}
